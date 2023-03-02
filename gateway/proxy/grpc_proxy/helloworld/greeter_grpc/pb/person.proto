@@ -1,0 +1,35 @@
+syntax = "proto3";  // 指定protocol buffers版本信息
+
+option go_package = ".;pb"; // 后期生成go文件的包名
+//package pb;
+
+// 定义消息体
+message Person {
+  // 名字
+  string name = 1; // 值为整数，原则上从1开始，也可以不这样。不能使用19000 - 19999
+  // 年龄
+  int32 age = 2;
+}
+
+// 定义了一个 gRPC 服务
+service HelloService {
+  rpc Hello (Person) returns (Person);
+}
+
+//// 定义枚举类型
+//enum Week {
+//  Monday = 0; // 枚举值
+//  Turesday = 1;
+//}
+//
+//// 定义消息体
+//message Student {
+//  string classname = 1;
+//  Person p = 2; // 嵌套
+//  Week w = 3;
+//  repeated int32 score = 4;  // 数组
+//  // 联合体
+//  oneof data {
+//    string teacher = 5;
+//  }
+//}

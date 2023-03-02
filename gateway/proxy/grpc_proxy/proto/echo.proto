@@ -1,0 +1,41 @@
+syntax = "proto3";            // protobuf协议版本
+
+package echo;                 // 当前包
+option go_package = ".;proto";// 编译后所在包
+
+// EchoRequest is the request for echo.
+message EchoRequest {
+  string message = 1;
+}
+
+// EchoResponse is the response for echo.
+message EchoResponse {
+  string message = 1;
+}
+
+// Echo is the echo service.
+service Echo {
+  // UnaryEcho is unary echo.
+  // 一元 RPC，客户端向服务器发送单个请求并返回单个响应，就像普通的函数调用一样
+  rpc UnaryEcho(EchoRequest) returns (EchoResponse) {}
+
+  // ServerStreamingEcho is server side streaming.
+  // 服务器流式处理 RPC，其中客户端向服务器发送请求并获取流以读回一系列消息。
+  // 客户端从返回的流中读取，一直到没有更多消息。gRPC 保证在单个 RPC 调用中对消息进行排序
+  rpc ServerStreamingEcho(EchoRequest) returns (stream EchoResponse) {}
+
+  // ClientStreamingEcho is client side streaming.
+  // 客户端流式处理 RPC，其中客户端写入一系列消息并将其发送到服务器。
+  // 客户端完成消息写入后，将等待服务器读取它们并返回其响应。
+  // 同样，gRPC 保证在单个 RPC 调用中对消息进行排序。
+  rpc ClientStreamingEcho(stream EchoRequest) returns (EchoResponse) {}
+
+  // BidirectionalStreamingEcho is bidirectional[ˌbaɪdəˈrekʃənl] streaming.
+  // 双向流式处理 RPC，其中双方都使用读写流发送一系列消息。
+  // 这两个流独立运行，因此客户端和服务器可以按照它们喜欢的任何顺序读取和写入：
+  // 例如，服务器可以在写入其响应之前等待接收所有客户端消息，或者它可以交替读取消息然后写入消息，
+  // 或者读取和写入的其他一些组合。将保留每个流中消息的顺序。
+  rpc BidirectionalStreamingEcho(stream EchoRequest) returns (stream EchoResponse) {}
+}
+
+
